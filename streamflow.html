@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Terra Forma Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; }
+    #map { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <header> 
+    <img src="logo.png" alt="Terraform Studios Logo">
+    <h1>Terra Forma Studios</h1></header>
+  <div id="map"></div>
+
+  <script>
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: 'raster',
+            tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tileSize: 256,
+            attribution: "© OpenStreetMap contributors"
+          }
+        },
+        layers: [
+          {
+            id: 'osm',
+            type: 'raster',
+            source: 'osm'
+          }
+        ]
+      },
+      center: [-97, 37],
+      zoom: 4
+    });
+    map.on('load', () => {
+  // Add local GeoJSON file as a source
+  map.addSource('local-points', {
+    type: 'geojson',
+    data: 'Data/MoldLocations.geojson'   // path to your file
+  });
+
+  // Add Mold Locations to Map
+  map.addLayer({
+    id: 'local-points-layer',
+    type: 'circle',
+    source: 'local-points',
+    paint: {
+      'circle-radius': 6,
+      'circle-color': '#007cbf',
+      'circle-stroke-color': '#ffffff',
+      'circle-stroke-width': 2
+    }
+  });
+
+  // Optional: Popup when clicked
+  map.on('click', 'local-points-layer', (e) => {
+    const props = e.features[0].properties;
+    const coords = e.features[0].geometry.coordinates;
+    new maplibregl.Popup()
+      .setLngLat(coords)
+      .setHTML(`<strong>${props.name || 'Point'}</strong>`)
+      .addTo(map);
+  });
+
+  map.on('mouseenter', 'local-points-layer', () => {
+    map.getCanvas().style.cursor = 'pointer';
+  });
+  map.on('mouseleave', 'local-points-layer', () => {
+    map.getCanvas().style.cursor = '';
+   });
+  });
+
+    // States we want
+    const states = ['co', 'ut'];
+    const apiBase = 'https://waterservices.usgs.gov/nwis/iv/?format=json&parameterCd=00060&siteType=ST&stateCd=';
+
+    async function fetchAllStates(states) {
+      const requests = states.map(state =>
+        fetch(apiBase + state).then(res => res.json())
+      ); // requests = [data of ca, data of co, data of fl]
+
+      const results = await Promise.all(requests);
+      let features = [];
+
+      results.forEach(data => {
+        const timeSeries = data.value.timeSeries;
+
+        timeSeries.forEach(site => {
+          const info = site.sourceInfo;
+          const lat = parseFloat(info?.geoLocation?.geogLocation?.latitude);
+          const lon = parseFloat(info?.geoLocation?.geogLocation?.longitude);
+          const siteName = info?.siteName;
+          const siteCode = info?.siteCode?.[0]?.value;
+          const valueObj = site?.values?.[0]?.value?.[0];
+          const rawValue = valueObj?.value;
+
+          // Filter out invalid / missing values
+          if (
+            !isNaN(lat) &&
+            !isNaN(lon) &&
+            siteName &&
+            siteCode &&
+            rawValue !== undefined &&
+            rawValue !== null &&
+            rawValue !== "-999999"
+          ) {
+            features.push({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [lon, lat]
+              },
+              properties: {
+                siteName,
+                siteCode,
+                flow: parseFloat(rawValue),
+                unit: site?.variable?.unit?.unitCode || 'ft³/s',
+                datetime: valueObj?.dateTime || '',
+                qualifier: (valueObj?.qualifiers && valueObj.qualifiers[0]) || ''
+              }
+            });
+          }
+        });
+      });
+
+      return {
+        type: 'FeatureCollection',
+        features
+      };
+    }
+
+    fetchAllStates(states).then(data => {
+      map.addSource('usgs-sites', {
+        type: 'geojson',
+        data: data
+      });
+
+      map.addLayer({
+        id: 'usgs-points',
+        type: 'circle',
+        source: 'usgs-sites',
+        paint: {
+          'circle-radius': 3,
+          'circle-color': [
+            'interpolate',
+            ['linear'],
+            ['get', 'flow'],
+            0, 'gray',
+            10, 'green',
+            100, 'yellow',
+            1000, 'red'
+          ],
+          'circle-stroke-color': '#fff',
+          'circle-stroke-width': 1
+        }
+      });
+
+      // Popup on click
+      map.on('click', 'usgs-points', (e) => {
+        const props = e.features[0].properties;
+        const coords = e.features[0].geometry.coordinates;
+
+        const html = `
+          <strong>${props.siteName}</strong><br>
+          Site ID: ${props.siteCode}<br>
+          Discharge: <strong>${props.flow} ${props.unit}</strong><br>
+          Time: ${props.datetime ? new Date(props.datetime).toLocaleString() : 'n/a'}<br>
+          Status: ${props.qualifier === 'A' ? 'Approved' : 'Provisional'}
+        `;
+
+        new maplibregl.Popup()
+          .setLngLat(coords)
+          .setHTML(html)
+          .addTo(map);
+      });
+
+      // Cursor pointer on hover
+      map.on('mouseenter', 'usgs-points', () => {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      map.on('mouseleave', 'usgs-points', () => {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+  </script>
+</body>
+</html>

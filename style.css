@@ -1,0 +1,47 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #504f95;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+header img {
+    vertical-align: middle;
+    width: 50px;
+    height: auto;
+    margin-right: 15px;
+}
+
+header h1 {
+    display: inline;
+    vertical-align: middle;
+}
+
+main {
+    display: flex; /*enables flexbox layout*/
+    flex: 1;
+}
+
+#sidebar {
+    padding: 20px;
+    width: 300px;
+    background-color: rgb(89, 89, 89);
+}
+
+#map {
+    flex: 1;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
