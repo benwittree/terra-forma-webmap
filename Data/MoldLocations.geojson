@@ -1,0 +1,19 @@
+{
+"type": "FeatureCollection",
+"name": "MoldLocations",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "River": "Gunnison (2024)", "CFS": "785", "Season": "Summer", "Month": "", "Day": "20", "Year": "2024", "Lat (DD)": 38.580647, "Long (DD)": -106.922102 }, "geometry": { "type": "Point", "coordinates": [ -106.922102, 38.580647 ] } },
+{ "type": "Feature", "properties": { "River": "Taylor", "CFS": "82", "Season": "Fall", "Month": "10", "Day": "15", "Year": "2024", "Lat (DD)": 38.708702, "Long (DD)": -106.802499 }, "geometry": { "type": "Point", "coordinates": [ -106.802499, 38.708702 ] } },
+{ "type": "Feature", "properties": { "River": "San Miguel ", "CFS": "68", "Season": "Fall", "Month": "10", "Day": "27", "Year": "2024", "Lat (DD)": 38.109132, "Long (DD)": -108.18934 }, "geometry": { "type": "Point", "coordinates": [ -108.18934, 38.109132 ] } },
+{ "type": "Feature", "properties": { "River": "Slate", "CFS": "32", "Season": "Summer", "Month": "9", "Day": "1", "Year": "2024", "Lat (DD)": 38.910295, "Long (DD)": -107.030233 }, "geometry": { "type": "Point", "coordinates": [ -107.030233, 38.910295 ] } },
+{ "type": "Feature", "properties": { "River": "Arkansas ", "CFS": "873", "Season": "Summer", "Month": "8", "Day": "11", "Year": "2024", "Lat (DD)": 38.391967, "Long (DD)": -105.775244 }, "geometry": { "type": "Point", "coordinates": [ -105.775244, 38.391967 ] } },
+{ "type": "Feature", "properties": { "River": "Animas", "CFS": "2,240", "Season": "Spring", "Month": "5", "Day": "27", "Year": "2024", "Lat (DD)": 37.151793, "Long (DD)": -107.884135 }, "geometry": { "type": "Point", "coordinates": [ -107.884135, 37.151793 ] } },
+{ "type": "Feature", "properties": { "River": "Uncompaghre", "CFS": "44", "Season": "Winter", "Month": "12", "Day": "", "Year": "2024", "Lat (DD)": 38.152722, "Long (DD)": -107.75213889 }, "geometry": { "type": "Point", "coordinates": [ -107.75213889, 38.152722 ] } },
+{ "type": "Feature", "properties": { "River": "Quartz Creek", "CFS": "14", "Season": "Summer", "Month": "7", "Day": "7", "Year": "2025", "Lat (DD)": 38.582972, "Long (DD)": -106.53808333000001 }, "geometry": { "type": "Point", "coordinates": [ -106.53808333, 38.582972 ] } },
+{ "type": "Feature", "properties": { "River": "Gold Creek", "CFS": "3", "Season": "Summer", "Month": "7", "Day": "7", "Year": "2025", "Lat (DD)": 38.5665, "Long (DD)": -106.61219444 }, "geometry": { "type": "Point", "coordinates": [ -106.61219444, 38.5665 ] } },
+{ "type": "Feature", "properties": { "River": "Spring Creek", "CFS": "9", "Season": "Summer", "Month": "8", "Day": "14", "Year": "2025", "Lat (DD)": 38.755778, "Long (DD)": -106.76986111 }, "geometry": { "type": "Point", "coordinates": [ -106.76986111, 38.755778 ] } },
+{ "type": "Feature", "properties": { "River": "Indian Creek", "CFS": "", "Season": "", "Month": "", "Day": "", "Year": "2025", "Lat (DD)": 38.152667, "Long (DD)": -109.62516667 }, "geometry": { "type": "Point", "coordinates": [ -109.62516667, 38.152667 ] } },
+{ "type": "Feature", "properties": { "River": "Gunnison (2023)", "CFS": "924", "Season": "Summer", "Month": "", "Day": "", "Year": "2023", "Lat (DD)": 38.513, "Long (DD)": -107.01336111000001 }, "geometry": { "type": "Point", "coordinates": [ -107.01336111, 38.513 ] } }
+]
+}
